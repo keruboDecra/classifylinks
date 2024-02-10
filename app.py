@@ -1,11 +1,7 @@
 # Imports
 import requests
 import re
-
-try:
-    from bs4 import BeautifulSoup
-except :
-    from BeautifulSoup4 import BeautifulSoup 
+from bs4 import BeautifulSoup
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 import joblib
