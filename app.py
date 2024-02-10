@@ -75,12 +75,22 @@ def cluster_news_articles(links):
     # Extract the text from each of the valid links
     texts = [extract_text(link) for link in valid_links]
 
-    # Preprocess the text (e.g. remove stop words, stem words, etc.)
+    # Preprocess the text (e.g., remove stop words, stem words, etc.)
     preprocessed_texts = preprocess(texts)
+
+    # Check if there are any valid preprocessed texts
+    if not preprocessed_texts:
+        st.warning("No valid texts extracted from the provided URLs.")
+        return []
 
     # Convert the preprocessed text into a matrix of TF-IDF features
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(preprocessed_texts)
+
+    # Check if there are any valid features
+    if X.shape[0] == 0 or X.shape[1] == 0:
+        st.warning("No valid features extracted from the preprocessed texts.")
+        return []
 
     # Use KMeans to cluster the articles into groups based on their content
     kmeans = KMeans(n_clusters=10, random_state=0)
