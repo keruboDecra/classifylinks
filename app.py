@@ -145,7 +145,7 @@ def main():
     for cluster_label in set(cluster_labels):
         st.subheader(f"Cluster {cluster_label}:")
         for i, link in enumerate(links):
-            if cluster_labels[i] == cluster_label:
+            if i < len(cluster_labels) and cluster_labels[i] == cluster_label:
                 st.write(f"\tArticle {i + 1} ({link})")
         st.write("\n")
 
