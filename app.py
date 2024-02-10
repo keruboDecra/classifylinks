@@ -63,6 +63,8 @@ def preprocess(texts):
 
     return preprocessed_texts
 
+# ... (previous code)
+
 def cluster_news_articles(links):
     # Filter out empty or invalid URLs
     valid_links = [link for link in links if link.strip()]
@@ -87,6 +89,9 @@ def cluster_news_articles(links):
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(preprocessed_texts)
 
+    # Check the shape of X
+    print(f"Shape of X: {X.shape}")
+
     # Check if there are any valid features
     if X.shape[0] == 0 or X.shape[1] == 0:
         st.warning("No valid features extracted from the preprocessed texts.")
@@ -94,10 +99,18 @@ def cluster_news_articles(links):
 
     # Use KMeans to cluster the articles into groups based on their content
     kmeans = KMeans(n_clusters=10, random_state=0)
-    kmeans.fit(X)
+
+    # Try to fit the KMeans model
+    try:
+        kmeans.fit(X)
+    except Exception as e:
+        print(f"Error while fitting KMeans: {e}")
+        return []
 
     # Return the cluster labels for each article
     return kmeans.labels_
+
+# ... (rest of the code)
 
 
 # Load vectorizer and kmeans models
