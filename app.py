@@ -10,26 +10,31 @@ import streamlit as st
 # Functions
 
 def extract_text(url):
-    # Check if the URL has a valid schema
-    if not url.startswith(('http://', 'https://')):
-        url = 'http://' + url  # Add http:// if missing
+    try:
+        # Check if the URL has a valid schema
+        if not url.startswith(('http://', 'https://')):
+            url = 'http://' + url  # Add http:// if missing
 
-    # Send a GET request to the URL and retrieve the response
-    response = requests.get(url)
+        # Send a GET request to the URL and retrieve the response
+        response = requests.get(url)
 
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Use BeautifulSoup to parse the HTML content of the page
-        soup = BeautifulSoup(response.content, 'html.parser')
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Use BeautifulSoup to parse the HTML content of the page
+            soup = BeautifulSoup(response.content, 'html.parser')
 
-        # Find all of the text in the HTML document
-        text = soup.get_text()
+            # Find all of the text in the HTML document
+            text = soup.get_text()
 
-        # Return the text
-        return text
-    else:
-        # If the request was not successful, return an empty string
+            # Return the text
+            return text
+        else:
+            # If the request was not successful, return an empty string
+            return ''
+    except requests.exceptions.ConnectionError as e:
+        st.warning(f"Connection error for URL {url}: {e}")
         return ''
+
 
 def preprocess(texts):
     preprocessed_texts = []
