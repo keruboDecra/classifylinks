@@ -118,38 +118,60 @@ def cluster_news_articles(links):
     return kmeans.labels_
 
 
+# ... (previous code)
 
+# Streamlit app
 def main():
     # Title and description
     st.title("News Article Clustering")
     st.write("This web app clusters news articles based on their content similarity.")
 
     # Provide a list of news article links
-    links = st.text_area("Enter news article links (one per line)", """
+    links_input = st.text_area("Enter news article links (one per line)", """
     https://www.gorillatoursafrica.com/things-to-do-in-kigali/
     https://www.thetravelersbuddy.com/2022/08/30/best-things-rwanda/
     """)
 
     # Convert input to a list of links
-    links = links.split("\n")
+    links = links_input.strip().split("\n")
 
-    # Cluster the articles
-    cluster_labels = cluster_news_articles(links)
+    # Filter out empty or invalid URLs
+    valid_links = [link for link in links if link.strip()]
 
-    # Display the cluster labels for each article
-    for cluster_label in set(cluster_labels):
-        st.subheader(f"Cluster {cluster_label}:")
-        for i, link in enumerate(links):
-            if cluster_labels[i] == cluster_label:
-                st.write(f"\tArticle {i + 1} ({link})")
-        st.write("\n")
+    # Cluster the articles only if there are valid links
+    if valid_links:
+        # Extract the text from each of the valid links
+        texts = [extract_text(link) for link in valid_links]
 
-    # Save the vectorizer and kmeans models
-    vectorizer_path = 'tfidf_vectorizer.joblib'
-    kmeans_path = 'kmeans_model.joblib'
-    joblib.dump(vectorizer, vectorizer_path)
-    joblib.dump(kmeans, kmeans_path)
+        # Preprocess the text (e.g., remove stop words, stem words, etc.)
+        preprocessed_texts = preprocess(texts)
 
-# Run the Streamlit app
-if __name__ == "__main__":
-    main()
+        # Convert the preprocessed text into a matrix of TF-IDF features
+        vectorizer = TfidfVectorizer()
+        X = vectorizer.fit_transform(preprocessed_texts)
+
+        # Check if there are any valid features
+        if X.shape[0] > 0 and X.shape[1] > 0:
+            # Use KMeans to cluster the articles into groups based on their content
+            kmeans = KMeans(n_clusters=10, random_state=0)
+
+            # Try to fit the KMeans model
+            try:
+                kmeans.fit(X)
+
+                # Display the cluster labels for each article
+                for cluster_label in set(kmeans.labels_):
+                    st.subheader(f"Cluster {cluster_label}:")
+                    for i, link in enumerate(valid_links):
+                        if kmeans.labels_[i] == cluster_label:
+                            st.write(f"\tArticle {i + 1} ({link})")
+                    st.write("\n")
+
+            except Exception as e:
+                st.warning(f"Error while fitting KMeans: {e}")
+        else:
+            st.warning("No valid features extracted from the preprocessed texts.")
+    else:
+        st.warning("No valid URLs provided.")
+
+# ... (rest of the code)
