@@ -110,16 +110,8 @@ def cluster_news_articles(links):
     # Return the cluster labels for each article
     return kmeans.labels_
 
-# ... (rest of the code)
 
 
-# Load vectorizer and kmeans models
-vectorizer_path = 'tfidf_vectorizer.joblib'
-kmeans_path = 'kmeans_model.joblib'
-vectorizer = joblib.load(vectorizer_path)
-kmeans = joblib.load(kmeans_path)
-
-# Streamlit app
 def main():
     # Title and description
     st.title("News Article Clustering")
@@ -144,6 +136,12 @@ def main():
             if cluster_labels[i] == cluster_label:
                 st.write(f"\tArticle {i + 1} ({link})")
         st.write("\n")
+
+    # Save the vectorizer and kmeans models
+    vectorizer_path = 'tfidf_vectorizer.joblib'
+    kmeans_path = 'kmeans_model.joblib'
+    joblib.dump(vectorizer, vectorizer_path)
+    joblib.dump(kmeans, kmeans_path)
 
 # Run the Streamlit app
 if __name__ == "__main__":
