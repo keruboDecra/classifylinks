@@ -1,8 +1,11 @@
 # Imports
 import requests
 import re
-from bs4 import BeautifulSoup
-from sklearn.feature_extraction.text import TfidfVectorizer
+
+try:
+    from bs4 import BeautifulSoup
+except :
+    from BeautifulSoup import BeautifulSoup from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 import joblib
 import streamlit as st
