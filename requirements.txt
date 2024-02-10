@@ -11,3 +11,5 @@ threadpoolctl
 google-trans-new
 openai
 tweepy==3.9.0
+beautifulsoup4
+requests
