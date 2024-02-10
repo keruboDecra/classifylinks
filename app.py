@@ -9,14 +9,21 @@ import streamlit as st
 
 # Functions
 
+from urllib.parse import urlparse, urlunparse
+
 def extract_text(url):
     try:
         # Remove leading and trailing whitespaces from the URL
         url = url.strip()
 
-        # Check if the URL has a valid schema
-        if not url.startswith(('http://', 'https://')):
-            url = 'http://' + url  # Add http:// if missing
+        # Parse the URL to validate and properly format it
+        parsed_url = urlparse(url)
+        if not parsed_url.scheme:
+            # If the scheme is missing, add 'http'
+            parsed_url = parsed_url._replace(scheme='http')
+
+        # Reconstruct the URL
+        url = urlunparse(parsed_url)
 
         # Send a GET request to the URL and retrieve the response
         response = requests.get(url)
@@ -37,6 +44,10 @@ def extract_text(url):
     except requests.exceptions.ConnectionError as e:
         st.warning(f"Connection error for URL {url}: {e}")
         return ''
+    except Exception as e:
+        st.warning(f"Error for URL {url}: {e}")
+        return ''
+
 
 def preprocess(texts):
     preprocessed_texts = []
