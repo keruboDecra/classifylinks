@@ -116,7 +116,6 @@ def main():
     links = st.text_area("Enter news article links (one per line)", """
     https://www.gorillatoursafrica.com/things-to-do-in-kigali/
     https://www.thetravelersbuddy.com/2022/08/30/best-things-rwanda/
-    # Add more links as needed
     """)
 
     # Convert input to a list of links
