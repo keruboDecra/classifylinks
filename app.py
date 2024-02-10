@@ -5,7 +5,7 @@ import re
 try:
     from bs4 import BeautifulSoup
 except :
-from BeautifulSoup import BeautifulSoup 
+    from BeautifulSoup import BeautifulSoup 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 import joblib
