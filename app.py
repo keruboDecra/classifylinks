@@ -10,6 +10,10 @@ import streamlit as st
 # Functions
 
 def extract_text(url):
+    # Check if the URL has a valid schema
+    if not url.startswith(('http://', 'https://')):
+        url = 'http://' + url  # Add http:// if missing
+
     # Send a GET request to the URL and retrieve the response
     response = requests.get(url)
 
