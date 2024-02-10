@@ -15,6 +15,9 @@ def extract_text(url):
         if not url.startswith(('http://', 'https://')):
             url = 'http://' + url  # Add http:// if missing
 
+        # Remove leading and trailing whitespaces from the URL
+        url = url.strip()
+
         # Send a GET request to the URL and retrieve the response
         response = requests.get(url)
 
@@ -34,6 +37,7 @@ def extract_text(url):
     except requests.exceptions.ConnectionError as e:
         st.warning(f"Connection error for URL {url}: {e}")
         return ''
+
 
 
 def preprocess(texts):
