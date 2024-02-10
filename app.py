@@ -10,7 +10,14 @@ import streamlit as st
 # Functions
 
 from urllib.parse import urlparse, urlunparse
+# ... (rest of the code)
 
+
+# Load vectorizer and kmeans models
+vectorizer_path = 'tfidf_vectorizer.joblib'
+kmeans_path = 'kmeans_model.joblib'
+vectorizer = joblib.load(vectorizer_path)
+kmeans = joblib.load(kmeans_path)
 def extract_text(url):
     try:
         # Remove leading and trailing whitespaces from the URL
