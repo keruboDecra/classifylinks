@@ -46,13 +46,19 @@ def preprocess(texts):
     return preprocessed_texts
 
 def cluster_news_articles(links):
-    # Extract the text from each of the links
-    texts = [extract_text(link) for link in links]
+    # Filter out empty or invalid URLs
+    valid_links = [link for link in links if link.strip()]
+
+    # Check if there are any valid links
+    if not valid_links:
+        st.warning("No valid URLs provided.")
+        return []
+
+    # Extract the text from each of the valid links
+    texts = [extract_text(link) for link in valid_links]
 
     # Preprocess the text (e.g. remove stop words, stem words, etc.)
     preprocessed_texts = preprocess(texts)
-
-    print(preprocessed_texts)
 
     # Convert the preprocessed text into a matrix of TF-IDF features
     vectorizer = TfidfVectorizer()
@@ -64,6 +70,7 @@ def cluster_news_articles(links):
 
     # Return the cluster labels for each article
     return kmeans.labels_
+
 
 # Load vectorizer and kmeans models
 vectorizer_path = 'tfidf_vectorizer.joblib'
